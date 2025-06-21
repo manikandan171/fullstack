@@ -1,16 +1,16 @@
-import React from 'react'
-import Welcome from '../Welcome'
-import Skills from '../Skills'
+import React from 'react';
+import Counter from '../hooks/Counter';
+import LikeDislike from '../hooks/LikeDislike';
 
 const Home = () => {
   return (
-    <div>
-        <h1> Home page</h1>
-        <Welcome name="Mani" country="India"/>
-       <Skills skill={['React','Node','Express','MAngoDB']}/>
-       <h1>Hello World</h1>
+    <div style={{ padding: '20px' }}>
+      <Counter />
+      <hr style={{ margin: '20px 0' }} />
+      <h2>Like and Dislike count</h2>
+      <LikeDislike />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

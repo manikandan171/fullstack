@@ -7,11 +7,13 @@ import Skills from './Skills'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import About from './pages/About'
-import Service from './Pages/Service'
+import Service from './pages/Service'
 import Navbar from './assets/componenets/Navbar'
 import State from './hooks/State'
 import Form from './hooks/Form'
 import Effects from './hooks/Effects'
+import User from './assets/componenets/User'
+import LikeDislike from './hooks/LikeDislike'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -26,6 +28,8 @@ function App() {
        <Route path='/state' element={<State/>}/>
        <Route path='/form' element={<Form/>}/>
        <Route path='/effect' element={<Effects/>}/>
+       <Route path='/user' element={<User/>}/>
+       <Route path='/like' element={<LikeDislike/>}/>
     </Routes>
     {/* <Welcome name='Deepan' country='India'/> */}
     {/* <Skills skill={['React','Node','Express','MongoDb']}/>   */}

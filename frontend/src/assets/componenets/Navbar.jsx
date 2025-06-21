@@ -14,6 +14,12 @@ const Navbar = () => {
                     <li>
                         <Link to="/Service">service</Link>
                     </li>
+                    <li>
+                        <Link to="/user">User</Link>
+                    </li>
+                    <li>
+                        <Link to="/like">Like/Dislike</Link>
+                    </li>
                 </ul>
             </nav>
         </div>
