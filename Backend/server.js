@@ -1,37 +1,92 @@
 import express from 'express';
-import mongoose from 'mongoose'; 
-import connectDB from './config/db.js';
+import { connectDB } from './config/db.js';
+import { User } from './model/user.js';
+import { form } from './model/form.js';
+import cors from 'cors';
 
 const app = express();
+
+connectDB()
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  age: Number,
-  isStudent: { type: Boolean, required: true } 
-});
+app.use(cors());
 
-const User = mongoose.model('users', userSchema);
+//custom
+const methodFind=(req,res,next)=>{
+    console.log(`${req.method} ${req.url}`);
+    next();
+};
+app.use(methodFind);
+
+const blockDelete=(req,res,next)=>{
+    if(req.method==="DELETE"){
+        return res.send('Delete function blocked')
+    }
+    next()
+}
+app.use(blockDelete)
 
 app.get('/get', async (req, res) => {
   const users = await User.find(); 
   res.json(users);
 });
 
-app.post('/post', (req, res) => {
-  res.send('from post');
+app.post('/post',async(req,res)=>{
+  try{
+    const { name, age, isStudent } = req.body;
+    const newUser = new User({
+      name,
+      age,
+      isStudent: isStudent === 'true' || isStudent === true
+    });
+    await newUser.save();
+    res.status(201).json(newUser);
+  }catch (error){
+    res.status(401).json(error)
+  }
+})
+
+app.get('/get/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
-app.put('/put', (req, res) => {
-  res.send('from put');
+app.delete('/delete/:id', async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) return res.status(404).json({ message: 'User not found' });
+    res.json({ message: 'User deleted', user: deletedUser });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
-app.patch('/patch', (req, res) => {
-  res.send('from patch');
+app.get('/getform', async (req, res) => {
+  try {
+    const formData = await form.find();
+    res.json(formData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
-connectDB().then(() => {
-  app.listen(3000, () => {
-    console.log('Server running on port 3000');
-  });
+app.post('/postform', async (req, res) => {
+  try {
+    const newform = new form(req.body);
+    await newform.save();
+    res.status(201).json({ msg: 'form created' });
+  } catch (error) {
+    res.status(401).json(error);
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
 });

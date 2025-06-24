@@ -1,7 +1,7 @@
 // db.js
 import mongoose from 'mongoose';
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     await mongoose.connect('mongodb://localhost:27017/student');
     console.log('MongoDB connected');
@@ -9,5 +9,3 @@ const connectDB = async () => {
     console.error('MongoDB connection failed:', error);
   }
 };
-
-export default connectDB;
