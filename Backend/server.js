@@ -3,6 +3,8 @@ import { connectDB } from './config/db.js';
 import { User } from './model/user.js';
 import { form } from './model/form.js';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
@@ -79,6 +81,7 @@ app.get('/getform', async (req, res) => {
 
 app.post('/postform', async (req, res) => {
   try {
+    console.log('Received data:', req.body);
     const newform = new form(req.body);
     await newform.save();
     res.status(201).json({ msg: 'form created' });

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import State from "../hooks/State";
 import { Link } from 'react-router-dom';
 import { UserContext } from "../hooks/UserContext"
 const About = () => {
-    const name =UserContext
+    const name = useContext(UserContext);
     return(
         <div>
               <h1>Hi! {name}</h1>

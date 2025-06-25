@@ -8,14 +8,15 @@ const Form = () => {
         password: '',
         department: ''
     });
+    const [users, setUsers] = useState([]);
     const [message, setMessage] = useState('');
-    const [allData, setAllData] = useState([]);
+    const [error, setError] = useState('');
 
     // Fetch all form data from backend
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:3000/getform');
-            setAllData(response.data);
+            setUsers(response.data);
         } catch (error) {
             console.error('Fetch error:', error);
         }
@@ -35,15 +36,18 @@ const Form = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage('');
+        setError('');
         try {
             await axios.post('http://localhost:3000/postform', formData);
             setMessage('Form submitted successfully!');
             setFormData({ name: '', email: '', password: '', department: '' });
             fetchData(); // Refresh the list after submit
-        } catch (error) {
-            setMessage('Submission failed!');
+        } catch (err) {
+            setError('Failed to submit form. Please try again.');
+            console.error(err);
         }
-    };
+    }
 
     return (
         <div>
@@ -58,11 +62,12 @@ const Form = () => {
                 <input type="text" name="department" value={formData.department} onChange={handleChange} /><br />
                 <button type='submit'>Submit</button>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p style={{ color: 'green' }}>{message}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <h2>Submitted Data</h2>
             <ul>
-                {allData.map((item) => (
+                {users.map((item) => (
                     <li key={item._id}>
                         Name: {item.name}, Email: {item.email}, Password: {item.password}, Department: {item.department}
                     </li>
